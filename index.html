@@ -1,0 +1,1394 @@
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Digital Lovebook</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <meta name="description" content="Digital Lovebook – a private, romantic corner of the internet made just for you." />  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">  
+  <style>  
+    :root {  
+      --bg-gradient: radial-gradient(circle at top left, #ffeaf1 0%, #f6ecff 40%, #fff9f6 100%);  
+      --bg-gradient-dark: radial-gradient(circle at top left, #1c1520 0%, #171822 40%, #120f16 100%);  
+      --glass-bg: rgba(255, 255, 255, 0.65);  
+      --glass-bg-dark: rgba(18, 14, 25, 0.7);  
+      --border-glass: rgba(255, 255, 255, 0.6);  
+      --border-glass-dark: rgba(255, 255, 255, 0.09);  
+      --accent: #f28ba8;  
+      --accent-soft: #f7c1d1;  
+      --accent-deep: #d4496e;  
+      --text-main: #3b2438;  
+      --text-soft: #7a5c76;  
+      --text-on-dark: #f7e9ff;  
+      --shadow-soft: 0 22px 60px rgba(148, 93, 132, 0.2);  
+      --radius-xl: 26px;  
+      --transition-fast: 0.25s ease;  
+      --transition-med: 0.45s ease;  
+    }  * {  
+  box-sizing: border-box;  
+  margin: 0;  
+  padding: 0;  
+}  
+html {  
+  scroll-behavior: smooth;  
+}  
+body {  
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;  
+  min-height: 100vh;  
+  color: var(--text-main);  
+  background: var(--bg-gradient);  
+  overflow-x: hidden;  
+  -webkit-font-smoothing: antialiased;  
+  transition: background 0.6s ease, color 0.4s ease;  
+  position: relative;  
+}  
+body.dark {  
+  background: var(--bg-gradient-dark);  
+  color: var(--text-on-dark);  
+}  
+
+/* Floating particles / hearts */  
+.particles {  
+  position: fixed;  
+  inset: 0;  
+  pointer-events: none;  
+  overflow: hidden;  
+  z-index: 1;  
+  opacity: 0.55;  
+}  
+.particle {  
+  position: absolute;  
+  width: 14px;  
+  height: 14px;  
+  border-radius: 50%;  
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #f5aac3 40%, #f28ba8 100%);  
+  opacity: 0.4;  
+  filter: blur(0.2px);  
+  animation: floatUp 16s linear infinite;  
+}  
+.particle.heart::before,  
+.particle.heart::after {  
+  content: "";  
+  position: absolute;  
+  width: 100%;  
+  height: 100%;  
+  background: inherit;  
+  border-radius: 50%;  
+  top: -50%;  
+  left: 0;  
+}  
+.particle.heart::after {  
+  top: 0;  
+  left: 50%;  
+}  
+.particle.heart {  
+  transform: rotate(-45deg);  
+}  
+@keyframes floatUp {  
+  0% { transform: translateY(100vh) translateX(0) scale(0.7); opacity: 0; }  
+  10% { opacity: 0.5; }  
+  100% { transform: translateY(-10vh) translateX(-20px) scale(1.1); opacity: 0; }  
+}  
+
+/* Glassmorphism utilities */  
+.glass {  
+  background: var(--glass-bg);  
+  border-radius: var(--radius-xl);  
+  border: 1px solid var(--border-glass);  
+  box-shadow: var(--shadow-soft);  
+  backdrop-filter: blur(22px) saturate(150%);  
+  -webkit-backdrop-filter: blur(22px) saturate(150%);  
+  position: relative;  
+  overflow: hidden;  
+}  
+body.dark .glass {  
+  background: var(--glass-bg-dark);  
+  border-color: var(--border-glass-dark);  
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6);  
+}  
+.glass::before {  
+  content: "";  
+  position: absolute;  
+  inset: -40%;  
+  background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.6), transparent 60%);  
+  opacity: 0.4;  
+  mix-blend-mode: screen;  
+  transform: translate3d(0,0,0);  
+  pointer-events: none;  
+}  
+
+/* Lock Screen */  
+#lock-screen {  
+  position: fixed;  
+  inset: 0;  
+  background: radial-gradient(circle at top left, #ffe3ee 0%, #f5dfff 40%, #ffd7c8 100%);  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  z-index: 9999;  
+  transition: opacity 0.7s ease, visibility 0.7s ease;  
+}  
+body.dark #lock-screen {  
+  background: radial-gradient(circle at top left, #1a101c 0%, #151124 40%, #1a1010 100%);  
+}  
+#lock-screen.hidden {  
+  opacity: 0;  
+  visibility: hidden;  
+}  
+.lock-inner {  
+  max-width: 420px;  
+  width: 92%;  
+  padding: 32px 26px 26px;  
+  text-align: center;  
+  position: relative;  
+}  
+.lock-title {  
+  font-family: 'Playfair Display', serif;  
+  font-size: 1.5rem;  
+  margin-bottom: 6px;  
+}  
+.lock-subtitle {  
+  font-size: 0.9rem;  
+  color: var(--text-soft);  
+  margin-bottom: 22px;  
+}  
+body.dark .lock-subtitle {  
+  color: rgba(249, 239, 255, 0.7);  
+}  
+.lock-hearts {  
+  position: absolute;  
+  top: -40px;  
+  left: 50%;  
+  transform: translateX(-50%);  
+  width: 120px;  
+  height: 120px;  
+  pointer-events: none;  
+}  
+.lock-heart {  
+  position: absolute;  
+  width: 52px;  
+  height: 52px;  
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #f7b4c9 35%, #f06292 100%);  
+  transform: rotate(-45deg) scale(1);  
+  top: 30px;  
+  left: 35px;  
+  filter: drop-shadow(0 14px 30px rgba(245, 119, 167, 0.7));  
+  animation: slowPulse 3.2s ease-in-out infinite;  
+}  
+.lock-heart::before,  
+.lock-heart::after {  
+  content: "";  
+  position: absolute;  
+  width: 52px;  
+  height: 52px;  
+  border-radius: 50%;  
+  background: inherit;  
+}  
+.lock-heart::before {  
+  top: -50%;  
+  left: 0;  
+}  
+.lock-heart::after {  
+  left: 50%;  
+  top: 0;  
+}  
+.lock-glow {  
+  position: absolute;  
+  inset: 0;  
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 70%);  
+  opacity: 0.5;  
+  filter: blur(2px);  
+  mix-blend-mode: screen;  
+  animation: slowPulse 4s ease-in-out infinite alternate;  
+}  
+@keyframes slowPulse {  
+  0% { transform: rotate(-45deg) scale(0.95); opacity: 0.9; }  
+  50% { transform: rotate(-45deg) scale(1.03); opacity: 1; }  
+  100% { transform: rotate(-45deg) scale(0.97); opacity: 0.9; }  
+}  
+
+.lock-input {  
+  margin: 8px 0 14px;  
+  display: flex;  
+  flex-direction: column;  
+  gap: 10px;  
+}  
+.lock-input input {  
+  padding: 10px 14px;  
+  border-radius: 999px;  
+  border: 1px solid rgba(255, 255, 255, 0.8);  
+  outline: none;  
+  font-size: 0.9rem;  
+  text-align: center;  
+  letter-spacing: 0.14em;  
+  background: rgba(255, 255, 255, 0.7);  
+  color: var(--text-main);  
+}  
+body.dark .lock-input input {  
+  background: rgba(25, 20, 35, 0.85);  
+  border-color: rgba(255, 255, 255, 0.25);  
+  color: var(--text-on-dark);  
+}  
+.btn {  
+  display: inline-flex;  
+  align-items: center;  
+  justify-content: center;  
+  padding: 10px 22px;  
+  border-radius: 999px;  
+  border: none;  
+  cursor: pointer;  
+  font-size: 0.9rem;  
+  font-weight: 500;  
+  letter-spacing: 0.04em;  
+  text-transform: uppercase;  
+  background: linear-gradient(135deg, #f6b6cc, #f28ba8);  
+  color: #fff;  
+  box-shadow: 0 10px 26px rgba(238, 118, 154, 0.6);  
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast), background 0.4s ease;  
+}  
+.btn:hover {  
+  transform: translateY(-1px);  
+  box-shadow: 0 16px 32px rgba(238, 118, 154, 0.75);  
+  filter: brightness(1.02);  
+}  
+.btn:active {  
+  transform: translateY(1px) scale(0.98);  
+  box-shadow: 0 8px 18px rgba(238, 118, 154, 0.6);  
+}  
+.btn-soft {  
+  background: transparent;  
+  border-radius: 999px;  
+  padding: 8px 16px;  
+  font-size: 0.8rem;  
+  border: 1px solid rgba(255, 255, 255, 0.8);  
+  color: var(--text-soft);  
+  box-shadow: none;  
+}  
+.btn-soft:hover {  
+  background: rgba(255, 255, 255, 0.7);  
+  color: var(--text-main);  
+  box-shadow: none;  
+}  
+body.dark .btn-soft {  
+  border-color: rgba(255, 255, 255, 0.25);  
+  color: rgba(249, 239, 255, 0.8);  
+}  
+body.dark .btn-soft:hover {  
+  background: rgba(255, 255, 255, 0.04);  
+  color: #fff;  
+}  
+.lock-error {  
+  min-height: 20px;  
+  font-size: 0.8rem;  
+  color: #d14b6f;  
+  opacity: 0;  
+  transform: translateY(4px);  
+  transition: opacity 0.4s ease, transform 0.4s ease;  
+}  
+.lock-error.visible {  
+  opacity: 1;  
+  transform: translateY(0);  
+}  
+
+/* Global layout */  
+main {  
+  opacity: 0;  
+  pointer-events: none;  
+  transition: opacity 0.9s ease;  
+  position: relative;  
+  z-index: 2;  
+}  
+main.unlocked {  
+  opacity: 1;  
+  pointer-events: auto;  
+}  
+
+header {  
+  position: sticky;  
+  top: 0;  
+  z-index: 5;  
+  padding: 12px 16px 10px;  
+  display: flex;  
+  justify-content: center;  
+}  
+.nav-inner {  
+  max-width: 1100px;  
+  width: 100%;  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 12px;  
+  padding: 8px 16px;  
+  border-radius: 999px;  
+  background: rgba(255, 255, 255, 0.7);  
+  border: 1px solid rgba(255, 255, 255, 0.8);  
+  backdrop-filter: blur(20px);  
+  -webkit-backdrop-filter: blur(20px);  
+  box-shadow: 0 16px 40px rgba(196, 145, 178, 0.35);  
+}  
+body.dark .nav-inner {  
+  background: rgba(15, 12, 23, 0.85);  
+  border-color: rgba(255, 255, 255, 0.12);  
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.9);  
+}  
+.logo {  
+  font-family: 'Playfair Display', serif;  
+  font-size: 1.05rem;  
+  letter-spacing: 0.14em;  
+  text-transform: uppercase;  
+}  
+.logo span {  
+  font-weight: 600;  
+}  
+.nav-actions {  
+  display: flex;  
+  align-items: center;  
+  gap: 8px;  
+}  
+.chip-toggle {  
+  display: inline-flex;  
+  align-items: center;  
+  gap: 6px;  
+  font-size: 0.78rem;  
+  padding: 5px 10px;  
+  border-radius: 999px;  
+  border: 1px solid rgba(255, 255, 255, 0.85);  
+  background: rgba(255, 255, 255, 0.65);  
+  color: var(--text-soft);  
+  cursor: pointer;  
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;  
+}  
+.chip-toggle span.icon {  
+  font-size: 0.85rem;  
+}  
+body.dark .chip-toggle {  
+  background: rgba(19, 16, 30, 0.85);  
+  border-color: rgba(255, 255, 255, 0.22);  
+  color: rgba(244, 232, 255, 0.82);  
+}  
+.chip-toggle:hover {  
+  transform: translateY(-1px);  
+}  
+
+.section {  
+  padding: 56px 18px;  
+  display: flex;  
+  justify-content: center;  
+}  
+.section-inner {  
+  max-width: 1100px;  
+  width: 100%;  
+}  
+@media (min-width: 960px) {  
+  .section {  
+    padding: 72px 32px;  
+  }  
+}  
+
+/* Hero */  
+.hero {  
+  min-height: calc(100vh - 80px);  
+  display: flex;  
+  align-items: center;  
+}  
+.hero-grid {  
+  display: grid;  
+  grid-template-columns: minmax(0, 1.2fr);  
+  gap: 26px;  
+  align-items: center;  
+}  
+@media (min-width: 900px) {  
+  .hero-grid {  
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);  
+    gap: 38px;  
+  }  
+}  
+.hero-heading {  
+  font-family: 'Playfair Display', serif;  
+  font-size: 2rem;  
+  line-height: 1.2;  
+  margin-bottom: 10px;  
+}  
+@media (min-width: 768px) {  
+  .hero-heading {  
+    font-size: 2.6rem;  
+  }  
+}  
+.hero-sub {  
+  font-size: 0.98rem;  
+  color: var(--text-soft);  
+  max-width: 380px;  
+  margin-bottom: 26px;  
+}  
+body.dark .hero-sub {  
+  color: rgba(245, 230, 255, 0.8);  
+}  
+.hero-card {  
+  padding: 20px 22px 20px;  
+  position: relative;  
+  overflow: hidden;  
+}  
+.hero-meta {  
+  font-size: 0.78rem;  
+  text-transform: uppercase;  
+  letter-spacing: 0.16em;  
+  color: var(--accent-deep);  
+  opacity: 0.9;  
+  margin-bottom: 12px;  
+}  
+body.dark .hero-meta {  
+  color: #ffb4cc;  
+}  
+.hero-cta {  
+  display: flex;  
+  flex-wrap: wrap;  
+  align-items: center;  
+  gap: 14px;  
+  margin-top: 12px;  
+}  
+.hero-note {  
+  font-family: 'Great Vibes', cursive;  
+  font-size: 1.2rem;  
+  color: var(--accent-deep);  
+}  
+body.dark .hero-note {  
+  color: #ffbcd3;  
+}  
+.hero-heart-orbit {  
+  position: relative;  
+  width: 240px;  
+  max-width: 100%;  
+  aspect-ratio: 4/3;  
+  margin: 0 auto;  
+}  
+.hero-heart-main {  
+  position: absolute;  
+  inset: 20% 18%;  
+  border-radius: 40%;  
+  background: radial-gradient(circle at 30% 20%, #fff 0%, #ffd2e1 30%, #f28ba8 70%, #d94a7b 100%);  
+  transform: rotate(-12deg);  
+  filter: drop-shadow(0 22px 50px rgba(212, 83, 132, 0.9));  
+  animation: slowFloat 4.8s ease-in-out infinite;  
+  clip-path: path("M 50 15 C 35 -5 0 5 0 40 C 0 70 30 90 50 100 C 70 90 100 70 100 40 C 100 5 65 -5 50 15 Z");  
+}  
+.hero-heart-inner {  
+  position: absolute;  
+  inset: 30% 28%;  
+  border-radius: inherit;  
+  background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.9), rgba(255, 213, 229, 0.8), transparent 70%);  
+  mix-blend-mode: screen;  
+  opacity: 0.8;  
+}  
+.hero-orbit-dot {  
+  position: absolute;  
+  width: 10px;  
+  height: 10px;  
+  border-radius: 999px;  
+  background: radial-gradient(circle, #fff, #f28ba8);  
+  box-shadow: 0 10px 24px rgba(234, 135, 171, 0.8);  
+  animation: orbit 9s linear infinite;  
+  transform-origin: 60px 60px;  
+}  
+.hero-orbit-dot:nth-child(2) { top: 12%; left: 8%; animation-delay: -1.4s; }  
+.hero-orbit-dot:nth-child(3) { top: 70%; left: 70%; animation-delay: -3.4s; }  
+.hero-orbit-dot:nth-child(4) { top: 78%; left: 12%; animation-delay: -6.8s; }  
+@keyframes orbit {  
+  from { transform: rotate(0deg) translateX(16px); opacity: 0.5; }  
+  50% { opacity: 1; }  
+  to { transform: rotate(360deg) translateX(16px); opacity: 0.5; }  
+}  
+@keyframes slowFloat {  
+  0% { transform: translateY(0) rotate(-12deg) scale(1); }  
+  50% { transform: translateY(-10px) rotate(-10deg) scale(1.01); }  
+  100% { transform: translateY(0) rotate(-12deg) scale(1); }  
+}  
+.scroll-hint {  
+  position: absolute;  
+  bottom: 18px;  
+  left: 50%;  
+  transform: translateX(-50%);  
+  font-size: 0.75rem;  
+  color: var(--text-soft);  
+  display: flex;  
+  align-items: center;  
+  gap: 6px;  
+  opacity: 0.9;  
+}  
+body.dark .scroll-hint {  
+  color: rgba(242, 227, 255, 0.8);  
+}  
+.scroll-dot {  
+  width: 6px;  
+  height: 18px;  
+  border-radius: 999px;  
+  border: 1px solid rgba(0,0,0,0.15);  
+  position: relative;  
+  background: rgba(255,255,255,0.8);  
+  overflow: hidden;  
+}  
+body.dark .scroll-dot {  
+  background: rgba(17, 13, 24, 0.9);  
+  border-color: rgba(255,255,255,0.4);  
+}  
+.scroll-dot::after {  
+  content: "";  
+  position: absolute;  
+  top: 3px;  
+  left: 50%;  
+  width: 3px;  
+  height: 4px;  
+  border-radius: 999px;  
+  background: var(--accent);  
+  transform: translateX(-50%);  
+  animation: scrollHint 1.6s ease-in-out infinite;  
+}  
+@keyframes scrollHint {  
+  0% { transform: translate(-50%, 0); opacity: 1; }  
+  60% { transform: translate(-50%, 7px); opacity: 0; }  
+  100% { transform: translate(-50%, 0); opacity: 0; }  
+}  
+
+/* Section titles */  
+.section-header {  
+  text-align: left;  
+  margin-bottom: 28px;  
+}  
+.section-kicker {  
+  text-transform: uppercase;  
+  letter-spacing: 0.2em;  
+  font-size: 0.78rem;  
+  color: var(--accent-deep);  
+  margin-bottom: 6px;  
+}  
+body.dark .section-kicker {  
+  color: #f7b4cc;  
+}  
+.section-title {  
+  font-family: 'Playfair Display', serif;  
+  font-size: 1.6rem;  
+  margin-bottom: 4px;  
+}  
+.section-sub {  
+  font-size: 0.9rem;  
+  color: var(--text-soft);  
+  max-width: 460px;  
+}  
+body.dark .section-sub {  
+  color: rgba(245, 232, 255, 0.8);  
+}  
+
+/* Story timeline */  
+.timeline {  
+  position: relative;  
+  margin-top: 16px;  
+  padding-left: 16px;  
+  border-left: 1px dashed rgba(188, 148, 168, 0.55);  
+}  
+body.dark .timeline {  
+  border-color: rgba(246, 217, 255, 0.28);  
+}  
+.timeline::before {  
+  content: "";  
+  position: absolute;  
+  top: 0;  
+  left: -4px;  
+  width: 8px;  
+  height: 8px;  
+  border-radius: 999px;  
+  background: linear-gradient(135deg, #f6b6cc, #f28ba8);  
+  box-shadow: 0 0 0 4px rgba(242, 139, 168, 0.2);  
+}  
+.timeline-item {  
+  position: relative;  
+  margin-bottom: 20px;  
+  opacity: 0;  
+  transform: translateY(14px);  
+  transition: opacity 0.6s ease, transform 0.6s ease;  
+}  
+.timeline-item.visible {  
+  opacity: 1;  
+  transform: translateY(0);  
+}  
+.timeline-dot {  
+  position: absolute;  
+  left: -20px;  
+  top: 18px;  
+  width: 12px;  
+  height: 12px;  
+  border-radius: 999px;  
+  background: #fff;  
+  border: 2px solid #f28ba8;  
+  box-shadow: 0 0 0 4px rgba(242, 139, 168, 0.2);  
+}  
+body.dark .timeline-dot {  
+  background: #1c1424;  
+  border-color: #ffb9d4;  
+}  
+.timeline-card {  
+  padding: 14px 16px 14px;  
+  border-radius: 18px;  
+  position: relative;  
+  overflow: hidden;  
+}  
+.timeline-label {  
+  font-size: 0.82rem;  
+  font-weight: 500;  
+  display: inline-flex;  
+  align-items: center;  
+  gap: 6px;  
+  margin-bottom: 4px;  
+}  
+.timeline-label span.emoji {  
+  font-size: 0.96rem;  
+}  
+.timeline-text {  
+  font-size: 0.9rem;  
+  color: var(--text-soft);  
+}  
+body.dark .timeline-text {  
+  color: rgba(243, 230, 255, 0.86);  
+}  
+/* Love notes */  
+.notes-grid {  
+  display: grid;  
+  grid-template-columns: minmax(0, 1fr);  
+  gap: 18px;  
+  margin-top: 18px;  
+}  
+@media (min-width: 768px) {  
+  .notes-grid {  
+    grid-template-columns: repeat(2, minmax(0, 1fr));  
+    gap: 20px;  
+  }  
+}  
+.note-card {  
+  padding: 18px 18px 16px;  
+  border-radius: 22px;  
+  position: relative;  
+  overflow: hidden;  
+  opacity: 0;  
+  transform: translateY(16px);  
+  transition: opacity 0.6s ease, transform 0.6s ease;  
+}  
+.note-card.visible {  
+  opacity: 1;  
+  transform: translateY(0);  
+}  
+.note-card::before {  
+  content: "";  
+  position: absolute;  
+  inset: -40px;  
+  background-image: radial-gradient(circle, rgba(255,255,255,0.55) 0, transparent 60%);  
+  opacity: 0.25;  
+  mix-blend-mode: screen;  
+}  
+.note-body {  
+  position: relative;  
+  z-index: 1;  
+  font-family: 'Great Vibes', cursive;  
+  font-size: 1.2rem;  
+  color: var(--accent-deep);  
+  line-height: 1.5;  
+}  
+body.dark .note-body {  
+  color: #ffb7d4;  
+}  
+.note-meta {  
+  position: relative;  
+  z-index: 1;  
+  margin-top: 10px;  
+  font-size: 0.78rem;  
+  text-transform: uppercase;  
+  letter-spacing: 0.16em;  
+  color: var(--text-soft);  
+}  
+body.dark .note-meta {  
+  color: rgba(246, 232, 255, 0.7);  
+}  
+.note-sparkle {  
+  position: absolute;  
+  right: 18px;  
+  top: 14px;  
+  width: 24px;  
+  height: 24px;  
+  pointer-events: none;  
+}  
+.note-sparkle span {  
+  position: absolute;  
+  inset: 0;  
+  border-radius: 999px;  
+  border: 1px solid rgba(255,255,255,0.7);  
+  animation: sparkle 3.6s ease-in-out infinite;  
+}  
+@keyframes sparkle {  
+  0% { transform: scale(0.6); opacity: 0.3; }  
+  50% { transform: scale(1); opacity: 0.9; }  
+  100% { transform: scale(0.7); opacity: 0.3; }  
+}  
+
+/* Final question */  
+.final-wrapper {  
+  margin-top: 18px;  
+  padding: 24px 22px 22px;  
+  text-align: center;  
+  position: relative;  
+  overflow: hidden;  
+}  
+.final-title {  
+  font-family: 'Playfair Display', serif;  
+  font-size: 1.8rem;  
+  margin-bottom: 10px;  
+}  
+.final-sub {  
+  font-size: 0.93rem;  
+  color: var(--text-soft);  
+  margin-bottom: 22px;  
+}  
+body.dark .final-sub {  
+  color: rgba(245, 231, 255, 0.8);  
+}  
+.final-actions {  
+  display: inline-flex;  
+  flex-wrap: wrap;  
+  gap: 12px;  
+  align-items: center;  
+  justify-content: center;  
+}  
+.btn-yes {  
+  background: linear-gradient(135deg, #f7b4cc, #f06292);  
+  min-width: 120px;  
+}  
+.btn-no {  
+  background: rgba(255, 255, 255, 0.85);  
+  color: var(--text-main);  
+  border-radius: 999px;  
+  border: 1px solid rgba(255, 255, 255, 0.9);  
+  box-shadow: 0 10px 20px rgba(178, 132, 162, 0.3);  
+  min-width: 84px;  
+  font-size: 0.86rem;  
+}  
+body.dark .btn-no {  
+  background: rgba(23, 19, 34, 0.95);  
+  color: rgba(245, 231, 255, 0.9);  
+  border-color: rgba(255, 255, 255, 0.18);  
+}  
+.final-footer {  
+  font-size: 0.82rem;  
+  color: var(--text-soft);  
+  margin-top: 18px;  
+}  
+body.dark .final-footer {  
+  color: rgba(245, 232, 255, 0.8);  
+}  
+
+/* Celebration */  
+.celebration-overlay {  
+  position: fixed;  
+  inset: 0;  
+  background: radial-gradient(circle at center, rgba(255,255,255,0.22), rgba(0,0,0,0.75));  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  pointer-events: none;  
+  opacity: 0;  
+  visibility: hidden;  
+  transition: opacity 0.6s ease, visibility 0.6s ease;  
+  z-index: 9997;  
+}  
+.celebration-overlay.visible {  
+  opacity: 1;  
+  visibility: visible;  
+  pointer-events: auto;  
+}  
+.celebration-message {  
+  text-align: center;  
+  color: #ffe8f5;  
+  font-family: 'Playfair Display', serif;  
+  font-size: 2rem;  
+  text-shadow: 0 10px 40px rgba(0,0,0,0.8);  
+  padding: 0 22px;  
+}  
+.celebration-sub {  
+  font-family: 'Great Vibes', cursive;  
+  font-size: 1.6rem;  
+  margin-top: 6px;  
+  color: #ffd1eb;  
+}  
+.confetti-heart {  
+  position: fixed;  
+  width: 18px;  
+  height: 18px;  
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #f7b4c9 40%, #f06292 100%);  
+  transform: rotate(-45deg);  
+  pointer-events: none;  
+  z-index: 9999;  
+  animation: confettiFall 3.8s ease-in forwards;  
+}  
+.confetti-heart::before,  
+.confetti-heart::after {  
+  content: "";  
+  position: absolute;  
+  width: 18px;  
+  height: 18px;  
+  border-radius: 50%;  
+  background: inherit;  
+  top: -50%;  
+  left: 0;  
+}  
+.confetti-heart::after {  
+  top: 0;  
+  left: 50%;  
+}  
+@keyframes confettiFall {  
+  0% { transform: translateY(-10vh) rotate(-45deg) scale(0.6); opacity: 0; }  
+  10% { opacity: 1; }  
+  100% { transform: translateY(110vh) rotate(40deg) scale(1); opacity: 0; }  
+}  
+
+/* Utility */  
+.sr-only {  
+  position: absolute;  
+  width: 1px;  
+  height: 1px;  
+  padding: 0;  
+  margin: -1px;  
+  overflow: hidden;  
+  clip: rect(0, 0, 0, 0);  
+  border: 0;  
+}  
+.share-chip {  
+  font-size: 0.78rem;  
+  padding: 6px 11px;  
+  border-radius: 999px;  
+  border: 1px dashed rgba(0,0,0,0.1);  
+  background: rgba(255,255,255,0.7);  
+  cursor: pointer;  
+}  
+body.dark .share-chip {  
+  background: rgba(23, 18, 31, 0.9);  
+  border-color: rgba(255,255,255,0.25);  
+  color: rgba(246,232,255,0.9);  
+}  
+
+@media (prefers-reduced-motion: reduce) {  
+  * {  
+    animation-duration: 0.001ms !important;  
+    animation-iteration-count: 1 !important;  
+    transition-duration: 0.001ms !important;  
+    scroll-behavior: auto !important;  
+  }  
+}
+
+  </style>  
+</head>  
+<body>  
+  <!-- Floating background particles -->  
+  <div class="particles" aria-hidden="true" id="particle-layer"></div>    <!-- Password Lock Screen -->    <section id="lock-screen">  
+    <div class="glass lock-inner">  
+      <div class="lock-hearts" aria-hidden="true">  
+        <div class="lock-heart"></div>  
+        <div class="lock-glow"></div>  
+      </div>  
+      <h1 class="lock-title">HAPPY VALENTINES DAY MINNU KUTTI</h1>  
+      <p class="lock-subtitle">This little corner of the internet is just for you. Enter our secret date to open it.</p>  <form id="lock-form" autocomplete="off" novalidate>  
+    <div class="lock-input">  
+      <label class="sr-only" for="lock-password">Secret code</label>  
+      <input id="lock-password" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" />  
+      <button type="submit" class="btn">Unlock</button>  
+    </div>  
+  </form>  
+  <div id="lock-error" class="lock-error"></div>  
+  <button type="button" class="btn-soft" id="hint-btn">Need a tiny hint?</button>  
+</div>
+
+  </section>    <!-- Celebration Overlay -->    <div class="celebration-overlay" id="celebration">  
+    <div class="celebration-message">  
+      Forever starts here.  
+      <div class="celebration-sub">Thank you for choosing us, again and again.</div>  
+    </div>  
+  </div>    <!-- Lightbox -->    <div class="lightbox" id="lightbox" aria-modal="true" role="dialog">  
+    <div class="lightbox-inner">  
+      <span class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</span>  
+      <img id="lightbox-img" alt="" style="display:none;">  
+      <video id="lightbox-video" controls style="display:none;"></video>  
+      <div class="lightbox-caption" id="lightbox-caption"></div>  
+    </div>  
+  </div>    <main id="main">  
+    <!-- Header -->  
+    <header>  
+      <div class="nav-inner">  
+        <div class="logo">  
+          DIGITAL <span>LOVEBOOK</span>  
+        </div>  
+        <div class="nav-actions">  
+          <button type="button" class="chip-toggle" id="music-toggle">  
+            <span class="icon" aria-hidden="true">♪</span>  
+            <span id="music-label">Music: Off</span>  
+          </button>  
+          <button type="button" class="chip-toggle" id="theme-toggle">  
+            <span class="icon" aria-hidden="true">☾</span>  
+            <span id="theme-label">Dark</span>  
+          </button>  
+        </div>  
+      </div>  
+    </header>  <!-- Hero -->  
+<section class="section hero" id="hero">  
+  <div class="section-inner">  
+    <div class="hero-grid">  
+      <div>  
+        <div class="hero-meta">Private &amp; just for you</div>  
+        <h2 class="hero-heading"> made this just for my minnu kutti ❤️</h2>  
+        <p class="hero-sub">A small, quiet place where our moments live. Take your time, breathe, and let every word remind you how deeply you are loved.</p>  
+        <div class="glass hero-card">  
+          <h3 style="font-size:1.1rem; margin-bottom:4px;">Our little universe</h3>  
+          <p style="font-size:0.9rem; color:var(--text-soft); max-width:410px;">  
+            No algorithms. No notifications. Just us – the way we really feel, written softly between the lines.  
+          </p>  
+          <div class="hero-cta">  
+            <button type="button" class="btn" id="begin-btn">Begin Our Story</button>  
+            <div class="hero-note">You are my favorite chapter.</div>  
+          </div>  
+        </div>  
+      </div>  
+      <div>  
+        <div class="hero-heart-orbit" aria-hidden="true">  
+          <div class="hero-heart-main">  
+            <div class="hero-heart-inner"></div>  
+          </div>  
+          <div class="hero-orbit-dot"></div>  
+          <div class="hero-orbit-dot"></div>  
+          <div class="hero-orbit-dot"></div>  
+        </div> 
+        <div class="glass hero-extra-text" style="
+  margin-top: 18px;
+  padding: 18px 20px;
+  text-align: center;
+">
+<p style="
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-soft);
+">
+    <!-- ✨ WRITE YOUR PARAGRAPH HERE ✨ -->
+    Happy valentines day to the sweetest and the most important person in my life. Love you sooooo soooooo much minnu kuttize ♥️.Nammalde relationship start cheytenu shesham ith 4th valentine aahnu. Hope next valentine nammak kanan pattum enn. Enta minnu kuttiye ee Nandhu orupaad orupaad miss cheyyanond. Each and every moment i miss you. I love you more than anyone in this world ath ini avsanm vare agne tanne aayirikkum aarokke vannalum ennik ente minnu kutti aahn valuth. Love you till the end of my life minnu kutti. HAPPY VALENTINES DAY CHAKKARE 😘🫂
+  </p>
+</div>
+      </div>  
+    </div>  
+  </div>  
+  <div class="scroll-hint">  
+    <div class="scroll-dot"></div>  
+    <span>Scroll softly</span>  
+  </div>  
+</section>  
+
+<!-- Our Story -->  
+<section class="section" id="story">  
+  <div class="section-inner">  
+    <div class="section-header">  
+      <div class="section-kicker">Our Story</div>  
+      <h2 class="section-title">The moments that became “us”</h2>  
+      <p class="section-sub">A quiet timeline of the little things that changed everything. All editable, just like the memories we keep adding.</p>  
+    </div>  
+    <div class="timeline">  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">💬</span>  
+            21/05/2008  
+          </div>  
+          <p class="timeline-text">  
+            who knew that this date would become the most important date in my life.  
+          </p>  
+        </div>  
+      </article>  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">🤍</span>  
+            18/07/2022  
+          </div>  
+          <p class="timeline-text">  
+            The day it all started.The day you started to live rent free in my heart.
+          </p>  
+        </div>  
+      </article>  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">📸</span>  
+            31/05/2023  
+          </div>  
+          <p class="timeline-text">  
+            Awww man that kiss on the cheek that was one of the best moment in my life. Just one kiss on my cheek was enough to send a thousand butterflies dancing in my stomach.   
+          </p>  
+        </div>  
+      </article>  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">🌧️</span>  
+            08/05/2024  
+          </div>  
+          <p class="timeline-text">  
+                That day, I’m pretty sure I was the happiest man on Earth. Even now, just thinking about that moment sends butterflies through me. 
+          </p>  
+        </div>  
+      </article> 
+            </article>  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">♥️</span>  
+            07/09/2025  
+          </div>  
+          <p class="timeline-text">  
+             There isn’t a day that passes without me thinking of every beautiful moment I shared with you.It's a day that i will never ever in my lifr It’s a day from my life that I will carry with me and never forget, no matter where life takes me.
+          </p>  
+        </div>  
+      </article>  
+      <article class="timeline-item">  
+        <div class="timeline-dot"></div>  
+        <div class="glass timeline-card">  
+          <div class="timeline-label">  
+            <span class="emoji">∞</span>  
+            Today &amp; forever  
+          </div>  
+          <p class="timeline-text">  
+            Today is my favorite version of us. And I can’t wait to see how beautifully we keep rewriting this story, together.  
+          </p>  
+        </div>  
+      </article>  
+    </div>  
+  </div>  
+</section>  
+
+
+<!-- Love Notes -->  
+<section class="section" id="notes">  
+  <div class="section-inner">  
+    <div class="section-header">  
+      <div class="section-kicker">Love notes</div>  
+      <h2 class="section-title">If my heart could write</h2>  
+      <p class="section-sub">Little notes I’d leave on your pillow, in your bag, or in the middle of your day – now living here, waiting for you.</p>  
+    </div>  
+    <div class="notes-grid">  
+      <article class="glass note-card">  
+        <div class="note-sparkle" aria-hidden="true">  
+          <span></span>  
+        </div>  
+        <div class="note-body">  
+          If you could hear the way my heart softens when I think of you, you’d never doubt how loved you are – not even for a second.  
+        </div>  
+        <div class="note-meta">Saved for the days you need a reminder</div>  
+      </article>  
+      <article class="glass note-card">  
+        <div class="note-sparkle" aria-hidden="true">  
+          <span></span>  
+        </div>  
+        <div class="note-body">  
+          I don’t need the perfect words. I just need you. Everything else feels small next to the way you make my world feel like home.  
+        </div>  
+        <div class="note-meta">Written between heartbeats</div>  
+      </article>  
+      <article class="glass note-card">  
+        <div class="note-sparkle" aria-hidden="true">  
+          <span></span>  
+        </div>  
+        <div class="note-body">  
+          Even on my quiet days, when I don’t know what to say, I’m still loving you in a thousand tiny, unspoken ways.  
+        </div>  
+        <div class="note-meta">For the silent moments</div>  
+      </article>  
+      <article class="glass note-card">  
+        <div class="note-sparkle" aria-hidden="true">  
+          <span></span>  
+        </div>  
+        <div class="note-body">  
+          No matter how the world looks tomorrow, I want you to remember this: I choose you. Again. Again. And always.  
+        </div>  
+        <div class="note-meta">Promised quietly, meant loudly</div>  
+      </article>  
+    </div>  
+  </div>  
+</section>  
+
+<!-- Final Question -->  
+<section class="section" id="final">  
+  <div class="section-inner">  
+    <div class="section-header">  
+      <div class="section-kicker">Us, next</div>  
+      <h2 class="section-title">A tiny, important question</h2>  
+      <p class="section-sub">Take a breath. Feel everything you’ve just read. And when you’re ready, answer with your heart.</p>  
+    </div>  
+
+    <div class="glass final-wrapper">  
+      <h3 class="final-title">Will you be my Valentine?</h3>  
+      <p class="final-sub">  
+        Not just for a day. Not just for a season. But for every ordinary Tuesday and every soft, quiet night we get to share.  
+      </p>  
+      <div class="final-actions">  
+        <button type="button" class="btn btn-yes" id="yes-btn">YES ❤️</button>  
+        <button type="button" class="btn btn-no" id="no-btn">NO 😅</button>  
+      </div>  
+      <div class="final-footer">  
+        This page is only for you. But if you ever want to keep it, you can save or share this link.  
+        <button type="button" class="share-chip" id="share-btn">Copy link</button>  
+      </div>  
+    </div>  
+  </div>  
+</section>  
+
+<!-- Background music (off by default) -->  
+<audio id="bg-music" loop preload="auto">  
+  <source src="https://cdn.pixabay.com/download/audio/2021/11/02/audio_711d5a70e3.mp3?filename=hopeful-romantic-piano-11157.mp3" type="audio/mpeg">  
+</audio>
+
+  </main>    <script>  
+    (function() {  
+      const PASSWORD = "210508";  
+  
+      const lockScreen = document.getElementById('lock-screen');  
+      const lockForm = document.getElementById('lock-form');  
+      const lockInput = document.getElementById('lock-password');  
+      const lockError = document.getElementById('lock-error');  
+      const hintBtn = document.getElementById('hint-btn');  
+      const mainEl = document.getElementById('main');  
+  
+      // Focus password field after a moment  
+      window.setTimeout(() => lockInput && lockInput.focus(), 600);  
+  
+      lockForm.addEventListener('submit', (e) => {  
+        e.preventDefault();  
+        const value = (lockInput.value || '').trim();  
+        if (value === PASSWORD) {  
+          lockError.classList.remove('visible');  
+          lockScreen.classList.add('hidden');  
+          mainEl.classList.add('unlocked');  
+          // Remove lock screen from flow after animation  
+          setTimeout(() => {  
+            lockScreen.style.display = 'none';  
+          }, 900);  
+          // Optionally update URL for shareable link (doesn't reveal password)  
+          if (!window.location.hash) {  
+            history.replaceState(null, '', window.location.pathname + '#lovebook');  
+          }  
+        } else {  
+          lockError.textContent = "That wasn’t it. Try the date when our story quietly began.";  
+          lockError.classList.add('visible');  
+          lockInput.value = '';  
+          lockInput.focus();  
+        }  
+      });  
+  
+      hintBtn.addEventListener('click', () => {  
+        lockError.textContent = "Hint: It’s in the format YYMMDD – the day everything started to change.";  
+        lockError.classList.add('visible');  
+      });  
+  
+      // Begin our story scroll  
+      const beginBtn = document.getElementById('begin-btn');  
+      beginBtn.addEventListener('click', () => {  
+        document.getElementById('story').scrollIntoView({ behavior: 'smooth' });  
+      });  
+  
+      // Dark mode toggle  
+      const themeToggle = document.getElementById('theme-toggle');  
+      const themeLabel = document.getElementById('theme-label');  
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;  
+      const storedTheme = localStorage.getItem('lovebook-theme');  
+  
+      function applyTheme(theme) {  
+        if (theme === 'dark') {  
+          document.body.classList.add('dark');  
+          themeLabel.textContent = 'Light';  
+        } else {  
+          document.body.classList.remove('dark');  
+          themeLabel.textContent = 'Dark';  
+        }  
+      }  
+      if (storedTheme) {  
+        applyTheme(storedTheme);  
+      } else if (prefersDark) {  
+        applyTheme('dark');  
+      }  
+  
+      themeToggle.addEventListener('click', () => {  
+        const isDark = document.body.classList.toggle('dark');  
+        applyTheme(isDark ? 'dark' : 'light');  
+        localStorage.setItem('lovebook-theme', isDark ? 'dark' : 'light');  
+      });  
+  
+      // Music toggle  
+      const musicToggle = document.getElementById('music-toggle');  
+      const musicLabel = document.getElementById('music-label');  
+      const bgMusic = document.getElementById('bg-music');  
+      let musicOn = false;  
+  
+      musicToggle.addEventListener('click', async () => {  
+        try {  
+          if (!musicOn) {  
+            await bgMusic.play();  
+            musicOn = true;  
+            musicLabel.textContent = 'Music: On';  
+          } else {  
+            bgMusic.pause();  
+            musicOn = false;  
+            musicLabel.textContent = 'Music: Off';  
+          }  
+        } catch (err) {  
+          console.warn('Music playback blocked:', err);  
+        }  
+      });  
+  
+      // Timeline & notes reveal on scroll  
+      const revealObserver = new IntersectionObserver((entries) => {  
+        entries.forEach((entry) => {  
+          if (entry.isIntersecting) {  
+            entry.target.classList.add('visible');  
+            revealObserver.unobserve(entry.target);  
+          }  
+        });  
+      }, { threshold: 0.1 });  
+  
+      document.querySelectorAll('.timeline-item, .note-card').forEach((el, idx) => {  
+        setTimeout(() => revealObserver.observe(el), 120 * idx);  
+      });  
+  
+      // Gallery lightbox  
+      const lightbox = document.getElementById('lightbox');  
+      const lightboxImg = document.getElementById('lightbox-img');  
+      const lightboxVideo = document.getElementById('lightbox-video');  
+      const lightboxCaption = document.getElementById('lightbox-caption');  
+      const lightboxClose = document.getElementById('lightbox-close');  
+  
+      function openLightbox(type, src, caption) {  
+        if (type === 'image') {  
+          lightboxImg.src = src;  
+          lightboxImg.style.display = 'block';  
+          lightboxVideo.style.display = 'none';  
+          lightboxVideo.pause();  
+        } else {  
+          lightboxVideo.src = src;  
+          lightboxVideo.style.display = 'block';  
+          lightboxImg.style.display = 'none';  
+        }  
+        lightboxCaption.textContent = caption || '';  
+        lightbox.classList.add('visible');  
+        document.body.style.overflow = 'hidden';  
+      }  
+  
+      function closeLightbox() {  
+        lightbox.classList.remove('visible');  
+        lightboxVideo.pause();  
+        document.body.style.overflow = '';  
+        setTimeout(() => {  
+          lightboxImg.src = '';  
+          lightboxVideo.src = '';  
+        }, 300);  
+      }  
+  
+      document.querySelectorAll('.gallery-item').forEach(item => {  
+        item.addEventListener('click', () => {  
+          const type = item.getAttribute('data-type');  
+          const src = item.getAttribute('data-src');  
+          const caption = item.getAttribute('data-caption');  
+          openLightbox(type, src, caption);  
+        });  
+      });  
+  
+      lightboxClose.addEventListener('click', closeLightbox);  
+      lightbox.addEventListener('click', (e) => {  
+        if (e.target === lightbox) closeLightbox();  
+      });  
+      document.addEventListener('keydown', (e) => {  
+        if (e.key === 'Escape' && lightbox.classList.contains('visible')) {  
+          closeLightbox();  
+        }  
+      });  
+  
+      // Final question interactions  
+      const yesBtn = document.getElementById('yes-btn');  
+      const noBtn = document.getElementById('no-btn');  
+      const celebration = document.getElementById('celebration');  
+  
+      yesBtn.addEventListener('click', () => {  
+        celebration.classList.add('visible');  
+        // Fire confetti hearts  
+        for (let i = 0; i < 28; i++) {  
+          const heart = document.createElement('div');  
+          heart.className = 'confetti-heart';  
+          heart.style.left = Math.random() * 100 + 'vw';  
+          heart.style.animationDelay = (Math.random() * 1.5) + 's';  
+          heart.style.opacity = '0';  
+          document.body.appendChild(heart);  
+          setTimeout(() => heart.remove(), 4000);  
+        }  
+        setTimeout(() => celebration.classList.remove('visible'), 6000);  
+        try {  
+          if (!musicOn) {  
+            bgMusic.play().then(() => {  
+              musicOn = true;  
+              musicLabel.textContent = 'Music: On';  
+            }).catch(() => {});  
+          }  
+        } catch (err) {}  
+      });  
+  
+      let noHoverCount = 0;  
+      const moveNoButton = () => {  
+        const parent = noBtn.parentElement;  
+        const rect = parent.getBoundingClientRect();  
+        const maxX = rect.width - noBtn.offsetWidth - 10;  
+        const maxY = rect.height - noBtn.offsetHeight - 10;  
+        const x = Math.random() * maxX;  
+        const y = Math.random() * maxY;  
+        noBtn.style.position = 'relative';  
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;  
+      };  
+      noBtn.addEventListener('mouseenter', () => {  
+        noHoverCount++;  
+        if (noHoverCount > 1) moveNoButton();  
+      });  
+      noBtn.addEventListener('click', (e) => {  
+        e.preventDefault();  
+        moveNoButton();  
+      });  
+  
+      // Share link  
+      const shareBtn = document.getElementById('share-btn');  
+      shareBtn.addEventListener('click', async () => {  
+        const url = window.location.href;  
+        if (navigator.clipboard && navigator.clipboard.writeText) {  
+          try {  
+            await navigator.clipboard.writeText(url);  
+            shareBtn.textContent = 'Copied';  
+            setTimeout(() => shareBtn.textContent = 'Copy link', 2000);  
+          } catch {  
+            shareBtn.textContent = 'Could not copy';  
+            setTimeout(() => shareBtn.textContent = 'Copy link', 2000);  
+          }  
+        } else {  
+          prompt('Copy this link:', url);  
+        }  
+      });  
+  
+      // Floating particles  
+      const particleLayer = document.getElementById('particle-layer');  
+      const particleCount = 18;  
+      for (let i = 0; i < particleCount; i++) {  
+        const p = document.createElement('div');  
+        p.className = 'particle heart';  
+        p.style.left = Math.random() * 100 + 'vw';  
+        p.style.animationDelay = (Math.random() * 16) + 's';  
+        p.style.animationDuration = (14 + Math.random() * 8) + 's';  
+        p.style.opacity = (0.25 + Math.random() * 0.4).toString();  
+        particleLayer.appendChild(p);  
+      }  
+    })();  
+  </script>  </body>  
+</html>
